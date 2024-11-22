@@ -1,0 +1,18 @@
+{
+  berlioz: {
+    queues: {
+      queues: [],
+      handlers: {},
+      factories: [
+        "Berlioz\\Package\\QueueManager\\Factory\\MemoryQueueFactory",
+        "Berlioz\\Package\\QueueManager\\Factory\\AwsSqsQueueFactory",
+        "Berlioz\\Package\\QueueManager\\Factory\\DbQueueFactory"
+      ]
+    }
+  },
+  commands: {
+    "queue:size": "Berlioz\\Package\\QueueManager\\Command\\QueueSizeCommand",
+    "queue:purge": "Berlioz\\Package\\QueueManager\\Command\\QueuePurgeCommand",
+    "queue:worker": "Berlioz\\Package\\QueueManager\\Command\\QueueWorkerCommand"
+  }
+}
