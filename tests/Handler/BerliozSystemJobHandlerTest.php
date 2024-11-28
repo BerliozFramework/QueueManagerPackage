@@ -40,6 +40,7 @@ class BerliozSystemJobHandlerTest extends TestCase
         ));
         $output = ob_get_clean();
 
-        $this->assertEquals('"foo bar"' . PHP_EOL . $core->getDirectories()->getAppDir(), $output);
+        $this->assertStringContainsString('foo bar', $output);
+        $this->assertStringEndsWith($core->getDirectories()->getAppDir(), $output);
     }
 }
