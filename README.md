@@ -23,7 +23,7 @@ $ composer require berlioz/queue-manager-package
 
 ### Dependencies
 
-* **PHP** ^8.0
+* **PHP** ^8.2
 * Packages:
     * **berlioz/cli-core**
     * **berlioz/queue-manager**
@@ -43,20 +43,35 @@ Default configuration:
             "default",
             "high",
             "low"
-          ]
+          ],
+          db: {
+            dsn: "mysql:dbname=mydb;host=localhost",
+            username: "myUsername",
+            password: "mySuperPassword"
+          }
+        },
+        // Case where you need to use same connection as Hector Package
+        {
+          type: "Berlioz\\QueueManager\\Queue\\DbQueue",
+          name: [
+            "default",
+            "high",
+            "low"
+          ],
+          db: {
+            dsn: "{config: hector.dsn}",
+            username: "{config: hector.username}",
+            password: "{config: hector.password}"
+          }
         }
       ],
-      handlers: {},
+      handlers: {
+        "jobname": "MyProject\\Job\\MyJobNameHandler"
+      },
       factories: [
         ""
       ]
-    },
-    
-    dsn: null,
-    read_dsn: null,
-    schemas: [],
-    dynamic_events: true,
-    types: {}
+    }
   }
 }
 ```
