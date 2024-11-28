@@ -2,7 +2,10 @@
   berlioz: {
     queues: {
       queues: [],
-      handlers: {},
+      handlers: {
+        "berlioz:command": "Berlioz\\Package\\QueueManager\\Handler\\BerliozCommandJobHandler",
+        "berlioz:system": "Berlioz\\Package\\QueueManager\\Handler\\BerliozSystemJobHandlerTest",
+      },
       factories: [
         "Berlioz\\Package\\QueueManager\\Factory\\MemoryQueueFactory",
         "Berlioz\\Package\\QueueManager\\Factory\\AwsSqsQueueFactory",
