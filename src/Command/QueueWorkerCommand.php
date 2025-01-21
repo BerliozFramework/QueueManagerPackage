@@ -28,6 +28,7 @@ use Psr\Log\LogLevel;
 #[Argument('queue', prefix: 'q', longPrefix: 'queue', description: 'Queue name', castTo: 'string')]
 #[Argument('limit', longPrefix: 'limit', description: 'Limit', defaultValue: 0, castTo: 'int')]
 #[Argument('delay', longPrefix: 'delay', description: 'Delay between 2 consumption (in seconds)', defaultValue: 0, castTo: 'float')]
+#[Argument('delayNoJob', longPrefix: 'delay-no-job', description: 'Delay if no job (in seconds)', defaultValue: 1, castTo: 'float')]
 #[Argument('memoryLimit', longPrefix: 'memory', description: 'Memory limit (MB)', defaultValue: 0, castTo: 'int')]
 #[Argument('timeLimit', longPrefix: 'time', description: 'Time limit (in seconds)', defaultValue: 0, castTo: 'int')]
 #[Argument('killFilePath', longPrefix: 'kill-file', description: 'Kill file path', castTo: 'string')]
@@ -73,6 +74,7 @@ class QueueWorkerCommand extends AbstractCommand
                 timeLimit: $env->getArgument('timeLimit') ?: INF,
                 killFilePath: $env->getArgument('killFilePath'),
                 sleep: $env->getArgument('delay'),
+                sleepNoJob: $env->getArgument('delayNoJob'),
             )
         );
     }

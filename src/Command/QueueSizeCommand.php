@@ -17,11 +17,12 @@ namespace Berlioz\Package\QueueManager\Command;
 use Berlioz\Cli\Core\Command\AbstractCommand;
 use Berlioz\Cli\Core\Command\Argument;
 use Berlioz\Cli\Core\Console\Environment;
-use Berlioz\QueueManager\Queue\QueueInterface;
 use Berlioz\QueueManager\QueueManager;
-use Generator;
 
 #[Argument('queue', prefix: 'q', longPrefix: 'queue', description: 'Queue name', castTo: 'string')]
+#[Argument('format', prefix: 'f', longPrefix: 'format', description: 'Output format', castTo: 'string')]
+#[Argument('total', longPrefix: 'total', description: 'Total', defaultValue: false, noValue: true, castTo: 'bool')]
+#[Argument('prometheusLabels', longPrefix: 'prometheus-labels', description: 'Prometheus labels', castTo: 'string')]
 class QueueSizeCommand extends AbstractCommand
 {
     public function __construct(
@@ -42,29 +43,42 @@ class QueueSizeCommand extends AbstractCommand
      */
     public function run(Environment $env): int
     {
-        $sizes = $this->getSizes($this->queueManager->filter(...$env->getArgumentMultiple('queue')));
+        $queueManager = $this->queueManager->filter(...$env->getArgumentMultiple('queue'));
+        $sizes = iterator_to_array($queueManager->stats());
+        $total = array_sum($sizes);
 
-        $env->console()->table(iterator_to_array($sizes));
+        switch ($env->getArgument('format')) {
+            // Prometheus format
+            case 'prometheus':
+                $labels = $env->getArgument('prometheusLabels') ?? '';
+                $labels = trim($labels, ' ,');
+                !empty($labels) && $labels = ',' . $labels;
 
-        return 0;
-    }
-
-    public function getSizes(QueueManager $queueManager): Generator
-    {
-        $total = 0;
-
-        /** @var QueueInterface $queue */
-        foreach ($queueManager->getQueues() as $queue) {
-            yield [
-                'Queue' => $queue->getName(),
-                'Size' => $size = $queue->size(),
-            ];
-            $total += $size;
+                foreach ($sizes as $queueName => $size) {
+                    $env->console()->out(sprintf('job_queue_length{queue_name="%s"%s} %d', $queueName, $labels, $size));
+                }
+                if ($env->getArgument('total')) {
+                    $env->console()->out(sprintf('job_queue_length_total{%s} %d', trim($labels, ','), $total));
+                }
+                break;
+            // JSON format
+            case 'json':
+                $env->console()->json(match ($env->getArgument('total')) {
+                    false => $sizes,
+                    true => ['queues' => $sizes, 'total' => $total],
+                });
+                break;
+            // RAW format
+            default:
+                $padding = $env->console()->padding(max(array_map(fn($v) => strlen($v), array_keys($sizes))));
+                foreach ($sizes as $queueName => $size) {
+                    $padding->label($queueName)->result($size);
+                }
+                if ($env->getArgument('total')) {
+                    $padding->label('')->result($total);
+                }
         }
 
-        yield [
-            'Queue' => '',
-            'Size' => $total,
-        ];
+        return 0;
     }
 }

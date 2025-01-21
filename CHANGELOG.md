@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.0.0-beta3] - 2025-01-21
+
+### Added
+
+- New `delay-no-job` argument for `queue:worker` command
+
+### Changed
+
+- Bump library `belioz/queue-manager` to 1.0.0-beta4
+- Improve output of `queue:size` command
+
 ## [2.0.0-beta2] - 2024-11-28
 
 ### Added
