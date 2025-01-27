@@ -40,6 +40,7 @@ class AwsSqsQueueFactory implements QueueFactory
                 sqsClient: $sqsClient,
                 queueUrl: $url,
                 name: is_int($name) ? $url : $name,
+                retryTime: (int)($config['retry_time'] ?? 30),
             );
         }
     }

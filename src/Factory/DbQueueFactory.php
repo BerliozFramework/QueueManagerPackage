@@ -45,6 +45,7 @@ class DbQueueFactory implements QueueFactory
                 connection: $connection,
                 name: $name,
                 tableName: $config['db']['table_name'] ?? 'queue_jobs',
+                retryTime: (int)($config['retry_time'] ?? 30),
                 maxAttempts: (int)($config['max_attempts'] ?? 5),
             );
         }

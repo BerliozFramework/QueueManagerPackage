@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.0.0-beta4] - 2025-01-27
+
+### Added
+
+- New `retry_time` config for queues `AwsSqsQueue` and `DbQueue`
+
+### Changed
+
+- Bump library `belioz/queue-manager` to 1.0.0-beta7 minimal
+
 ## [2.0.0-beta3] - 2025-01-21
 
 ### Added
