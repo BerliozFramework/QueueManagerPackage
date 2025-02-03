@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [2.0.0-beta5] - 2025-02-03
+
+### Added
+
+- New `backoff` option
+
+### Changed
+
+- Bump library `belioz/queue-manager` to 1.0.0-beta8 minimal
+
 ## [2.0.0-beta4] - 2025-01-27
 
 ### Added

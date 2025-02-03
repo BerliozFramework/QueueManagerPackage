@@ -31,6 +31,7 @@ use Psr\Log\LogLevel;
 #[Argument('delayNoJob', longPrefix: 'delay-no-job', description: 'Delay if no job (in seconds)', defaultValue: 1, castTo: 'float')]
 #[Argument('memoryLimit', longPrefix: 'memory', description: 'Memory limit (MB)', defaultValue: 0, castTo: 'int')]
 #[Argument('timeLimit', longPrefix: 'time', description: 'Time limit (in seconds)', defaultValue: 0, castTo: 'int')]
+#[Argument('backoff', longPrefix: 'backoff', description: 'Backoff time (in seconds)', defaultValue: 0, castTo: 'int')]
 #[Argument('killFilePath', longPrefix: 'kill-file', description: 'Kill file path', castTo: 'string')]
 #[Argument('verbose', prefix: 'v', description: 'Verbose', noValue: true, castTo: 'bool')]
 class QueueWorkerCommand extends AbstractCommand
@@ -75,6 +76,7 @@ class QueueWorkerCommand extends AbstractCommand
                 killFilePath: $env->getArgument('killFilePath'),
                 sleep: $env->getArgument('delay'),
                 sleepNoJob: $env->getArgument('delayNoJob'),
+                backoffTime: (int)$env->getArgument('backoff'),
             )
         );
     }
