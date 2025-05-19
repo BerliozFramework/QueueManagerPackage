@@ -24,12 +24,10 @@
       "/tests_env/src/"
     ]
   },
-  "minimum-stability": "beta",
-  "prefer-stable": true,
   "require": {
     "php": "^8.2",
     "berlioz/cli-core": "^2.0",
-    "berlioz/queue-manager": "^1.0.0-beta8"
+    "berlioz/queue-manager": "^1.0"
   },
   "require-dev": {
     "aws/aws-sdk-php": "^3.316",
