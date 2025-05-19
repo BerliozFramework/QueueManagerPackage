@@ -1,0 +1,43 @@
+{
+  "name": "berlioz/queue-manager-package",
+  "type": "berlioz-package",
+  "description": "Queue Manager package for Berlioz Framework",
+  "license": "MIT",
+  "homepage": "https://getberlioz.com",
+  "authors": [
+    {
+      "name": "Ronan Giron",
+      "email": "ronan@getberlioz.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Berlioz\\Package\\QueueManager\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Berlioz\\Package\\QueueManager\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^8.2",
+    "berlioz/cli-core": "^1.0",
+    "berlioz/queue-manager": "^1.0"
+  },
+  "require-dev": {
+    "aws/aws-sdk-php": "^3.316",
+    "hectororm/query": "^1.0",
+    "phpunit/phpunit": "^9.5"
+  },
+  "suggest": {
+    "ext-pcntl": "Tu use signals to exit worker",
+    "aws/aws-sdk-php": "To use AWS SQS service",
+    "hectororm/query": "To use database queue"
+  },
+  "config": {
+    "berlioz": {
+      "package": "Berlioz\\Package\\QueueManager\\BerliozPackage"
+    }
+  }
+}
