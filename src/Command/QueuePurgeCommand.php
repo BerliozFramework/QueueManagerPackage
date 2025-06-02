@@ -53,7 +53,7 @@ class QueuePurgeCommand extends AbstractCommand
      */
     public function run(GetOpt $getOpt): int
     {
-        $queueManager = $this->queueManager->filter(...$getOpt->getOption('queue'));
+        $queueManager = $this->queueManager->filter(...($getOpt->getOption('queue') ?? []));
 
         /** @var QueueInterface $queue */
         foreach ($queueManager->getQueues() as $queue) {

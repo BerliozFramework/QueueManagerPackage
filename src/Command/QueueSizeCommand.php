@@ -50,7 +50,7 @@ class QueueSizeCommand extends AbstractCommand
      */
     public function run(GetOpt $getOpt): int
     {
-        $queueManager = $this->queueManager->filter(...$getOpt->getOption('queue'));
+        $queueManager = $this->queueManager->filter(...($getOpt->getOption('queue') ?? []));
         $sizes = iterator_to_array($queueManager->stats());
         $total = array_sum($sizes);
 

@@ -98,7 +98,7 @@ class QueueWorkerCommand extends AbstractCommand
                     }
                 }
 
-                print $message;
+                print $message . PHP_EOL;
             }
         };
 
@@ -106,16 +106,16 @@ class QueueWorkerCommand extends AbstractCommand
         $worker->setLogger($logger);
 
         return $worker->run(
-            $this->queueManager->filter(...$getOpt->getOption('queue')),
+            $this->queueManager->filter(...($getOpt->getOption('queue') ?? [])),
             new WorkerOptions(
                 name: $getOpt->getOption('name') ?: null,
                 limit: $getOpt->getOption('limit') ?: INF,
                 memoryLimit: $getOpt->getOption('memoryLimit') ?: INF,
                 timeLimit: $getOpt->getOption('timeLimit') ?: INF,
                 killFilePath: $getOpt->getOption('killFilePath'),
-                sleep: $getOpt->getOption('delay'),
-                sleepNoJob: $getOpt->getOption('delayNoJob'),
-                backoffTime: (int)$getOpt->getOption('backoff'),
+                sleep: $getOpt->getOption('delay') ?: 0,
+                sleepNoJob: $getOpt->getOption('delayNoJob') ?: 1,
+                backoffTime: (int)$getOpt->getOption('backoff') ?: 0,
             )
         );
     }
