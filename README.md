@@ -28,6 +28,12 @@ $ composer require berlioz/queue-manager-package
     * **berlioz/cli-core**
     * **berlioz/queue-manager**
 
+## Commands
+
+- `queue:size`: Get size of queues
+- `queue:purge`: Purge queues of all jobs
+- `queue:worker`: Start work for queues jobs
+
 ## Configuration
 
 Default configuration:
