@@ -26,12 +26,12 @@
     "berlioz/queue-manager": "^1.0"
   },
   "require-dev": {
-    "aws/aws-sdk-php": "^3.316",
-    "hectororm/query": "^1.0",
     "phpunit/phpunit": "^9.5"
   },
   "suggest": {
     "ext-pcntl": "Tu use signals to exit worker",
+    "ext-redis": "To use Redis queue",
+    "ext-amqp": "To use AMQP queue",
     "aws/aws-sdk-php": "To use AWS SQS service",
     "hectororm/query": "To use database queue"
   },

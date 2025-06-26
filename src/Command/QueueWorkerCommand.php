@@ -73,6 +73,9 @@ class QueueWorkerCommand extends AbstractCommand
             (new Option(null, 'backoff', GetOpt::OPTIONAL_ARGUMENT))
                 ->setDescription('Backoff time (in seconds)')
                 ->setValidation('is_numeric'),
+            (new Option(null, 'backoff-multiplier', GetOpt::OPTIONAL_ARGUMENT))
+                ->setDescription('Backoff multiplier')
+                ->setValidation('is_numeric'),
             (new Option(null, 'kill-file', GetOpt::OPTIONAL_ARGUMENT))
                 ->setDescription('Kill file path'),
         ];
@@ -110,12 +113,13 @@ class QueueWorkerCommand extends AbstractCommand
             new WorkerOptions(
                 name: $getOpt->getOption('name') ?: null,
                 limit: $getOpt->getOption('limit') ?: INF,
-                memoryLimit: $getOpt->getOption('memoryLimit') ?: INF,
-                timeLimit: $getOpt->getOption('timeLimit') ?: INF,
-                killFilePath: $getOpt->getOption('killFilePath'),
+                memoryLimit: $getOpt->getOption('memory') ?: INF,
+                timeLimit: $getOpt->getOption('time') ?: INF,
+                killFilePath: $getOpt->getOption('kill-file'),
                 sleep: $getOpt->getOption('delay') ?: 0,
-                sleepNoJob: $getOpt->getOption('delayNoJob') ?: 1,
+                sleepNoJob: $getOpt->getOption('delay-no-job') ?: 1,
                 backoffTime: (int)$getOpt->getOption('backoff') ?: 0,
+                backoffMultiplier: (int)$getOpt->getOption('backoff-multiplier') ?: 1,
             )
         );
     }
