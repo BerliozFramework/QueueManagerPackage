@@ -30,8 +30,6 @@
     "berlioz/queue-manager": "^1.2"
   },
   "require-dev": {
-    "aws/aws-sdk-php": "^3.316",
-    "hectororm/query": "^1.0",
     "phpunit/phpunit": "^9.5"
   },
   "suggest": {
