@@ -112,14 +112,14 @@ class QueueWorkerCommand extends AbstractCommand
             $this->queueManager->filter(...($getOpt->getOption('queue') ?? [])),
             new WorkerOptions(
                 name: $getOpt->getOption('name') ?: null,
-                limit: $getOpt->getOption('limit') ?: INF,
-                memoryLimit: $getOpt->getOption('memory') ?: INF,
-                timeLimit: $getOpt->getOption('time') ?: INF,
-                killFilePath: $getOpt->getOption('kill-file'),
-                sleep: $getOpt->getOption('delay') ?: 0,
-                sleepNoJob: $getOpt->getOption('delay-no-job') ?: 1,
-                backoffTime: (int)$getOpt->getOption('backoff') ?: 0,
-                backoffMultiplier: (int)$getOpt->getOption('backoff-multiplier') ?: 1,
+                limit: (float)($getOpt->getOption('limit') ?: INF),
+                memoryLimit: (float)($getOpt->getOption('memory') ?: INF),
+                timeLimit: (float)($getOpt->getOption('time') ?: INF),
+                killFilePath: $getOpt->getOption('kill-file') ?: null,
+                sleep: (float)($getOpt->getOption('delay') ?: 0),
+                sleepNoJob: (float)($getOpt->getOption('delay-no-job') ?: 1),
+                backoffTime: (int)($getOpt->getOption('backoff') ?: 0),
+                backoffMultiplier: (int)($getOpt->getOption('backoff-multiplier') ?: 1),
             )
         );
     }
