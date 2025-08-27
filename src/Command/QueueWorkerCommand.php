@@ -23,12 +23,6 @@ use GetOpt\GetOpt;
 use GetOpt\Option;
 use Psr\Log\AbstractLogger;
 
-
-#[Argument('memoryLimit', longPrefix: 'memory', description: 'Memory limit (MB)', defaultValue: 0, castTo: 'int')]
-#[Argument('timeLimit', longPrefix: 'time', description: 'Time limit (in seconds)', defaultValue: 0, castTo: 'int')]
-#[Argument('backoff', longPrefix: 'backoff', description: 'Backoff time (in seconds)', defaultValue: 0, castTo: 'int')]
-#[Argument('killFilePath', longPrefix: 'kill-file', description: 'Kill file path', castTo: 'string')]
-#[Argument('verbose', prefix: 'v', description: 'Verbose', noValue: true, castTo: 'bool')]
 class QueueWorkerCommand extends AbstractCommand
 {
     public function __construct(
@@ -78,6 +72,8 @@ class QueueWorkerCommand extends AbstractCommand
                 ->setValidation('is_numeric'),
             (new Option(null, 'kill-file', GetOpt::OPTIONAL_ARGUMENT))
                 ->setDescription('Kill file path'),
+            (new Option('v', null, GetOpt::NO_ARGUMENT))
+                ->setDescription('Verbose'),
         ];
     }
 
@@ -87,6 +83,17 @@ class QueueWorkerCommand extends AbstractCommand
     public function run(GetOpt $getOpt): int
     {
         $logger = new class extends AbstractLogger {
+            public bool $verbose = false;
+
+            public function debug($message, array $context = array()): void
+            {
+                if (!$this->verbose) {
+                    return;
+                }
+
+                parent::debug($message, $context);
+            }
+
             public function log($level, $message, array $context = array()): void
             {
                 $message = (string)$message;
@@ -104,6 +111,7 @@ class QueueWorkerCommand extends AbstractCommand
                 print $message . PHP_EOL;
             }
         };
+        $logger->verbose = !!$getOpt->getOption('verbose');
 
         $worker = new Worker($this->jobHandlerManager);
         $worker->setLogger($logger);
