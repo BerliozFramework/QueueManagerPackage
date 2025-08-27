@@ -109,6 +109,11 @@ class QueueWorkerCommand extends AbstractCommand
                 }
 
                 print $message . PHP_EOL;
+
+                foreach ($context as $key => $val) {
+                    print "{$key}:" . PHP_EOL;
+                    print (string)$val . PHP_EOL;
+                }
             }
         };
         $logger->verbose = !!$getOpt->getOption('verbose');

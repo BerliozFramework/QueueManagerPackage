@@ -10,6 +10,10 @@ use [Keep a Changelog] (http://keepachangelog.com/).
 
 - New `verbose` option
 
+### Changed
+
+- Print additional context infos from logging context
+
 ## [1.1.1] - 2025-08-21
 
 ### Fixed
