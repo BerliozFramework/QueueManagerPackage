@@ -21,6 +21,8 @@ use Hector\Connection\Connection;
 
 class DbQueueFactory implements QueueFactory
 {
+    use QueueFactoryTrait;
+
     /**
      * @inheritDoc
      */
@@ -40,13 +42,16 @@ class DbQueueFactory implements QueueFactory
             password: $config['db']['password'] ?? null,
         );
 
-        foreach ((array)($config['name'] ?? []) as $name) {
+        foreach ((array)($config['name'] ?? []) as $queue) {
+            !is_array($queue) && $queue = ['name' => (string)$queue];
+
             yield new DbQueue(
                 connection: $connection,
-                name: $name,
+                name: $queue['name'] ?? 'default',
                 tableName: $config['db']['table_name'] ?? 'queue_jobs',
-                retryTime: (int)($config['retry_time'] ?? 30),
-                maxAttempts: (int)($config['max_attempts'] ?? 5),
+                retryTime: (int)($queue['retry_time'] ?? $config['retry_time'] ?? 30),
+                maxAttempts: (int)($queue['max_attempts'] ?? $config['max_attempts'] ?? 5),
+                limiter: self::getRateLimiterFromConfig($queue['rate_limit'] ?? null),
             );
         }
     }

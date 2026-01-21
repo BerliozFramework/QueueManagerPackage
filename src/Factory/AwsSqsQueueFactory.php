@@ -20,6 +20,8 @@ use Generator;
 
 class AwsSqsQueueFactory implements QueueFactory
 {
+    use QueueFactoryTrait;
+
     /**
      * @inheritDoc
      */
@@ -35,12 +37,16 @@ class AwsSqsQueueFactory implements QueueFactory
     {
         $sqsClient = new SqsClient($config['client'] ?? []);
 
-        foreach ((array)($config['name'] ?? []) as $name => $url) {
+        foreach ((array)($config['name'] ?? []) as $name => $queue) {
+            !is_array($queue) && $queue = ['name' => $name, 'url' => (string)$queue];
+            is_int($queue['name']) && $queue['name'] = $queue['url'];
+
             yield new AwsSqsQueue(
                 sqsClient: $sqsClient,
-                queueUrl: $url,
-                name: is_int($name) ? $url : $name,
-                retryTime: (int)($config['retry_time'] ?? 30),
+                queueUrl: $queue['url'] ?? null,
+                name: $queue['name'] ?? 'default',
+                retryTime: (int)($queue['retry_time'] ?? $config['retry_time'] ?? 30),
+                limiter: self::getRateLimiterFromConfig($queue['rate_limit'] ?? null),
             );
         }
     }

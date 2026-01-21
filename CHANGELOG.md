@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file. This projec
 to [Semantic Versioning] (http://semver.org/). For change log format,
 use [Keep a Changelog] (http://keepachangelog.com/).
 
+## [1.3.0] - 2026-01-21
+
+### Added
+
+- New rate limit option for worker and queues
+- `retry_time` and `max_attempts` options for queues
+- Tests
+
+### Changed
+
+- Bump library `belioz/queue-manager` to 1.3 minimal
+
 ## [1.2.0] - 2025-09-26
 
 ### Added

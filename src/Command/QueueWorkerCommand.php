@@ -17,6 +17,8 @@ namespace Berlioz\Package\QueueManager\Command;
 use Berlioz\CliCore\Command\AbstractCommand;
 use Berlioz\QueueManager\Handler\JobHandlerManager;
 use Berlioz\QueueManager\QueueManager;
+use Berlioz\QueueManager\RateLimiter\MultiRateLimiter;
+use Berlioz\QueueManager\RateLimiter\NullRateLimiter;
 use Berlioz\QueueManager\Worker;
 use Berlioz\QueueManager\WorkerOptions;
 use GetOpt\GetOpt;
@@ -64,6 +66,8 @@ class QueueWorkerCommand extends AbstractCommand
             (new Option(null, 'time', GetOpt::OPTIONAL_ARGUMENT))
                 ->setDescription('Time limit (in seconds)')
                 ->setValidation('is_numeric'),
+            (new Option(null, 'rate', GetOpt::MULTIPLE_ARGUMENT))
+                ->setDescription('Rate limit'),
             (new Option(null, 'backoff', GetOpt::OPTIONAL_ARGUMENT))
                 ->setDescription('Backoff time (in seconds)')
                 ->setValidation('is_numeric'),
@@ -133,6 +137,10 @@ class QueueWorkerCommand extends AbstractCommand
                 sleepNoJob: (float)($getOpt->getOption('delay-no-job') ?: 1),
                 backoffTime: (int)($getOpt->getOption('backoff') ?: 0),
                 backoffMultiplier: (int)($getOpt->getOption('backoff-multiplier') ?: 1),
+                rateLimiter: match ($getOpt->getOption('rate') ?: null) {
+                    null => new NullRateLimiter(),
+                    default => MultiRateLimiter::createFromString(...$getOpt->getOption('rate')),
+                },
             )
         );
     }
