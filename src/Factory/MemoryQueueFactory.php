@@ -14,14 +14,13 @@ declare(strict_types=1);
 
 namespace Berlioz\Package\QueueManager\Factory;
 
-use Berlioz\Core\Exception\ConfigException;
-use Berlioz\QueueManager\Queue\DbQueue;
 use Berlioz\QueueManager\Queue\MemoryQueue;
 use Generator;
-use Hector\Connection\Connection;
 
 class MemoryQueueFactory implements QueueFactory
 {
+    use QueueFactoryTrait;
+
     /**
      * @inheritDoc
      */
@@ -35,11 +34,14 @@ class MemoryQueueFactory implements QueueFactory
      */
     public static function createFromConfig(array $config): Generator
     {
-        foreach ((array)($config['name'] ?? []) as $name) {
+        foreach ((array)($config['name'] ?? []) as $queue) {
+            !is_array($queue) && $queue = ['name' => (string)$queue];
+
             yield new MemoryQueue(
-                name: $name,
-                retryTime: (int)($config['retry_time'] ?? 30),
-                maxAttempts: (int)($config['max_attempts'] ?? 5),
+                name: $queue['name'] ?? 'default',
+                retryTime: (int)($queue['retry_time'] ?? $config['retry_time'] ?? 30),
+                maxAttempts: (int)($queue['max_attempts'] ?? $config['max_attempts'] ?? 5),
+                limiter: self::getRateLimiterFromConfig($queue['rate_limit'] ?? null),
             );
         }
     }

@@ -46,8 +46,8 @@ Default configuration:
         {
           type: "Berlioz\\QueueManager\\Queue\\DbQueue",
           name: [
-            "default",
             "high",
+            "default",
             "low"
           ],
           db: {
@@ -60,15 +60,21 @@ Default configuration:
         {
           type: "Berlioz\\QueueManager\\Queue\\DbQueue",
           name: [
+            {
+              name: "high",
+              rate_limit: "100/mins",
+              max_attempts: 1,
+            },
             "default",
-            "high",
             "low"
           ],
           db: {
             dsn: "{config: hector.dsn}",
             username: "{config: hector.username}",
             password: "{config: hector.password}"
-          }
+          },
+          retry_time: 300, // Default: 30 seconds
+          max_attempts: 4, // Default: 5
         }
       ],
       handlers: {

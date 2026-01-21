@@ -19,6 +19,8 @@ use Berlioz\Cli\Core\Command\Argument;
 use Berlioz\Cli\Core\Console\Environment;
 use Berlioz\QueueManager\Handler\JobHandlerManager;
 use Berlioz\QueueManager\QueueManager;
+use Berlioz\QueueManager\RateLimiter\MultiRateLimiter;
+use Berlioz\QueueManager\RateLimiter\NullRateLimiter;
 use Berlioz\QueueManager\Worker;
 use Berlioz\QueueManager\WorkerOptions;
 use League\CLImate\Logger;
@@ -31,6 +33,7 @@ use Psr\Log\LogLevel;
 #[Argument('delayNoJob', longPrefix: 'delay-no-job', description: 'Delay if no job (in seconds)', defaultValue: 1, castTo: 'float')]
 #[Argument('memoryLimit', longPrefix: 'memory', description: 'Memory limit (MB)', defaultValue: 0, castTo: 'int')]
 #[Argument('timeLimit', longPrefix: 'time', description: 'Time limit (in seconds)', defaultValue: 0, castTo: 'int')]
+#[Argument('rateLimit', longPrefix: 'rate', description: 'Rate limit', castTo: 'string')]
 #[Argument('backoff', longPrefix: 'backoff', description: 'Backoff time (in seconds)', defaultValue: 0, castTo: 'int')]
 #[Argument('backoffMultiplier', longPrefix: 'backoff-multiplier', description: 'Backoff multiplier', defaultValue: 1, castTo: 'int')]
 #[Argument('killFilePath', longPrefix: 'kill-file', description: 'Kill file path', castTo: 'string')]
@@ -79,6 +82,10 @@ class QueueWorkerCommand extends AbstractCommand
                 sleepNoJob: $env->getArgument('delayNoJob'),
                 backoffTime: (int)$env->getArgument('backoff'),
                 backoffMultiplier: (int)$env->getArgument('backoffMultiplier'),
+                rateLimiter: match ($env->getArgumentMultiple('rateLimit') ?: null) {
+                    null => new NullRateLimiter(),
+                    default => MultiRateLimiter::createFromString(...$env->getArgumentMultiple('rateLimit')),
+                },
             )
         );
     }

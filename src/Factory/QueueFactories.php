@@ -17,7 +17,6 @@ namespace Berlioz\Package\QueueManager\Factory;
 use Berlioz\Config\Config;
 use Berlioz\Core\Exception\ConfigException;
 use Berlioz\QueueManager\Queue\QueueInterface;
-use Psr\Container\ContainerInterface;
 
 class QueueFactories
 {
@@ -25,7 +24,6 @@ class QueueFactories
 
     public function __construct(
         private Config $config,
-//        private ContainerInterface $container,
     )
     {
         foreach ($this->config->get('berlioz.queues.factories', []) as $factoryClass) {
